@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #FDFCFB;
+  --foreground: #2C1810;
+  --sage-accent: #9FB0AA;
+  --rose-accent: #DAA2A1;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* This class activates the font only on specific pages */
+.theme-classic {
+  font-family: 'EB Garamond', serif;
+}
+
+@utility prose-classic {
+  font-family: 'EB Garamond', serif;
+  font-size: 18px;
+  line-height: 1.75;
+  color: rgba(44, 24, 16, 0.9);
+}
+
+@layer components {
+  /* Signature Drop Caps */
+  .drop-cap-sage::first-letter {
+    float: left;
+    font-family: 'EB Garamond', serif;
+    font-size: 3.5rem;
+    line-height: 0.9;
+    margin-right: 0.75rem;
+    margin-top: 0.4rem;
+    color: var(--sage-accent);
+  }
+
+  .drop-cap-rose::first-letter {
+    float: left;
+    font-family: 'EB Garamond', serif;
+    font-size: 3.5rem;
+    line-height: 0.9;
+    margin-right: 0.75rem;
+    margin-top: 0.4rem;
+    color: var(--rose-accent);
+  }
+
+  .label-classic {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-weight: 500;
+    color: var(--sage-accent);
+  }
+
+  .brew-line {
+    height: 1rem;
+    width: 1px;
+  }
+
+  /* Existing Shelf Styles */
+  .shelf-card {
+    @apply w-full max-w-[500px] aspect-square bg-white rounded-sm p-10 flex flex-col justify-between border border-[#2C1810]/5 transition-all duration-700;
+  }
+  
+  .shelf-image-wrapper {
+    @apply aspect-square w-full overflow-hidden bg-[#F5E8E0] relative;
+  }
+}
