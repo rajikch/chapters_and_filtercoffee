@@ -11,25 +11,26 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="bg-[#FDFCFB] min-h-screen">
+      <body className="bg-[#FDFCFB]">
         <header className="flex justify-between items-start px-12 py-10 max-w-7xl mx-auto">
-          
-          {/* Left Side: Identity & Navigation */}
+          {/* Left Side: Your Original Navigation Block */}
           <div className="flex flex-col gap-4">
             <span className="text-[#9FB0AA] uppercase tracking-[0.3em] text-[10px] font-bold">
               Montréal // 2026
             </span>
-            <nav className="flex gap-12 text-[#2C1810] text-sm font-serif italic">
-              <Link href="/about" className="hover:line-through decoration-[#6b8e23]">About</Link>
-              <Link href="/archive" className="hover:line-through decoration-[#6b8e23]">Archive</Link>
-              <Link href="/coffee_admin" className="hover:line-through decoration-[#6b8e23]">The Librarian's Desk</Link>
-            </nav>
+            <div className="flex gap-12 text-[#2C1810] font-serif italic text-sm">
+              <Link href="/about" className="hover:line-through">About</Link>
+              <Link href="/archive" className="hover:line-through">Archive</Link>
+              <Link href="/coffee_admin" className="hover:line-through">The Librarian's Desk</Link>
+            </div>
           </div>
 
-          {/* Right Side: The CFC Logo Mark */}
-          <div className="flex flex-col items-end border-r-2 border-[#6b8e23] pr-5 py-1">
-            <span className="text-3xl tracking-[0.3em] text-[#2C1810] font-serif leading-none">CFC</span>
-            <div className="flex items-center gap-2 mt-3 opacity-80">
+          {/* Right Side: The NEW Clickable CFC Logo Mark */}
+          <Link href="/" className="group flex flex-col items-end border-r-2 border-[#6b8e23] pr-5 py-1 transition-all">
+            <span className="text-3xl tracking-[0.3em] text-[#2C1810] font-serif leading-none">
+              CFC
+            </span>
+            <div className="flex items-center gap-2 mt-3 opacity-80 group-hover:opacity-100 transition-opacity">
               {/* Mini Book Icon */}
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5D4037" strokeWidth="2">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -49,7 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div className="w-1 h-1.5 bg-[#5D4037] rounded-full -rotate-12"></div>
               </div>
             </div>
-          </div>
+          </Link>
         </header>
 
         {children}
