@@ -68,9 +68,7 @@ export default function AboutPage() {
           <Link href="/about" className="hover:line-through">About</Link>
           <Link href="/archive" className="hover:line-through">Archive</Link>
           {/* --- Subtle Admin Portal --- */}
-          <Link href="/coffee_admin" className="ml-1 opacity-20 hover:opacity-100 transition-opacity">
-          The Librarian's Desk
-          </Link>
+          <Link href="/coffee_admin" className="hover:line-through">The Librarian's Desk</Link>
 
         </div>
       </nav>
