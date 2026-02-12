@@ -3,9 +3,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 
-// Force Next.js to skip the cache and fetch fresh data on every visit
-export const revalidate = 3600;
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!, 
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
