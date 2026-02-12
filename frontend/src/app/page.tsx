@@ -5,76 +5,38 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export default function AboutPage() {
+export default function HomePage() {
   const [activeChoice, setActiveChoice] = useState<'veda' | 'amma'>('veda');
   const [vedaDB, setVedaDB] = useState<any>(null);
   const [ammaDB, setAmmaDB] = useState<any>(null);
 
   useEffect(() => {
     async function fetchPicks() {
-      const veda = await supabase
-        .from('books')
-        .select('*')
-        .eq('is_vedas_pick', true)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      const veda = await supabase.from('books').select('*').eq('is_vedas_pick', true).order('created_at', { ascending: false }).limit(1).single();
       if (veda.data) setVedaDB(veda.data);
 
-      const amma = await supabase
-        .from('books')
-        .select('*')
-        .eq('is_vedas_pick', false)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
+      const amma = await supabase.from('books').select('*').eq('is_vedas_pick', false).order('created_at', { ascending: false }).limit(1).single();
       if (amma.data) setAmmaDB(amma.data);
     }
     fetchPicks();
   }, []);
 
   const content = {
-    veda: vedaDB ? {
-      title: vedaDB.title,
-      meta: `${vedaDB.author} • Veda's Pick`,
-      image: vedaDB.cover_url,
-      accent: "bg-[#DAA2A1]",
-      label: "The Nursery Shelf",
-      link: `/veda/${vedaDB.id}`
-    } : null,
-    amma: ammaDB ? {
-      title: ammaDB.title,
-      meta: `${ammaDB.author} • Morning Desk`,
-      image: ammaDB.cover_url,
-      accent: "bg-[#9FB0AA]",
-      label: "The Morning Desk",
-      link: `/amma/${ammaDB.id}`
-    } : null
+    veda: vedaDB ? { title: vedaDB.title, meta: `${vedaDB.author} • Veda's Pick`, image: vedaDB.cover_url, accent: "bg-[#DAA2A1]", label: "The Nursery Shelf", link: `/veda/${vedaDB.id}` } : null,
+    amma: ammaDB ? { title: ammaDB.title, meta: `${ammaDB.author} • Morning Desk`, image: ammaDB.cover_url, accent: "bg-[#9FB0AA]", label: "The Morning Desk", link: `/amma/${ammaDB.id}` } : null
   };
 
   const active = activeChoice === 'veda' ? content.veda : content.amma;
 
   return (
-    <main className="h-screen w-full bg-[#FDFCFB] text-[#2C1810] overflow-hidden flex flex-col">
-      <nav className="flex justify-between items-center px-12 py-8 uppercase tracking-[0.3em] text-[10px] font-bold">
-        <span className="text-[#9FB0AA]">Montréal // 2026</span>
-        <div className="flex gap-12 text-[#2C1810]">
-          <Link href="/about" className="hover:line-through">About</Link>
-          <Link href="/archive" className="hover:line-through">Archive</Link>
-          {/* --- Subtle Admin Portal --- */}
-          <Link href="/coffee_admin" className="ml-1 opacity-20 hover:opacity-100 transition-opacity">
-          The Librarian's Desk
-          </Link>
-
-        </div>
-      </nav>
-
+    <main className="min-h-screen w-full bg-[#FDFCFB] text-[#2C1810] flex flex-col">
+      {/* Note: Header/Nav is now in app/layout.tsx, so we start directly with the content */}
+      
       <section className="flex-1 grid lg:grid-cols-2 px-12 pb-12 gap-12 items-center">
         {/* Left: Branding & Intro */}
         <div className="flex flex-col justify-center max-w-xl">
@@ -83,21 +45,23 @@ export default function AboutPage() {
             <span className="italic text-[#5D4037] ml-8">& Filter Coffee</span>
           </h1>
 
-          {/* NEW: The Website Note */}
+          {/* RESTORED & LINKED: The Website Note */}
           <div className="max-w-md ml-8 space-y-4">
-            <p className="font-serif text-lg leading-relaxed text-[#2C1810]/70 italic">
-              A dual-archive of a life in Montreal. This is a quiet corner dedicated to my little one's 
-              growing nursery shelf and my own morning desk reflections where literature 
-              meets the slow ritual of a daily brew.
-            </p>
-            <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#9FB0AA]">
-              Curating childhood & marginalia.
-            </p>
+            <Link href="/about" className="group block cursor-pointer">
+              <p className="font-serif text-lg leading-relaxed text-[#2C1810]/70 italic group-hover:text-[#2C1810] transition-colors">
+                A dual-archive of a life in Montreal. This is a quiet corner dedicated to my little one's 
+                growing nursery shelf and my own morning desk reflections where literature 
+                meets the slow ritual of a daily brew.
+              </p>
+              <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#9FB0AA] mt-2 group-hover:underline decoration-[#6b8e23]">
+                Read the full note →
+              </p>
+            </Link>
           </div>
           
           <div className="mt-16 flex items-center gap-10">
             <button 
-              onClick={() => setActiveChoice('veda')}
+              onClick={() => setActiveChoice('veda')} 
               className={`flex flex-col items-start transition-all cursor-pointer ${activeChoice === 'veda' ? 'opacity-100' : 'opacity-30'}`}
             >
               <span className="text-[10px] font-bold uppercase tracking-widest mb-1">The Nursery Shelf</span>
@@ -105,7 +69,7 @@ export default function AboutPage() {
             </button>
 
             <button 
-              onClick={() => setActiveChoice('amma')}
+              onClick={() => setActiveChoice('amma')} 
               className={`flex flex-col items-start transition-all cursor-pointer ${activeChoice === 'amma' ? 'opacity-100' : 'opacity-30'}`}
             >
               <span className="text-[10px] font-bold uppercase tracking-widest mb-1">The Morning Desk</span>
@@ -120,16 +84,13 @@ export default function AboutPage() {
             <div className="shelf-card">
               <div className="shelf-image-wrapper">
                 <img 
-                  key={activeChoice}
+                  key={activeChoice} 
                   src={active.image} 
                   alt={active.title} 
-                  className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-700"
+                  className="w-full h-full object-cover animate-in fade-in zoom-in-95 duration-700" 
                 />
-                <div className={`shelf-label-strip ${active.accent}`}>
-                  Reading From: {active.label}
-                </div>
+                <div className={`shelf-label-strip ${active.accent}`}>Reading From: {active.label}</div>
               </div>
-
               <div className="mt-6 flex justify-between items-end">
                 <div className="max-w-[70%]">
                   <h3 className="font-serif text-2xl leading-tight">{active.title}</h3>
@@ -141,7 +102,7 @@ export default function AboutPage() {
               </div>
             </div>
           ) : (
-            <div className="font-serif italic opacity-20">Gathering the library...</div>
+            <div className="font-serif italic opacity-20 text-center">Gathering the library...</div>
           )}
         </div>
       </section>

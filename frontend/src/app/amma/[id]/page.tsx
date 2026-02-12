@@ -12,7 +12,7 @@ export default async function AmmaReviewPage({ params }: { params: { id: string 
   return (
     <main className="min-h-screen">
       <nav className="p-6 lg:px-24 lg:py-12 flex justify-between items-baseline max-w-7xl mx-auto">
-        <Link href="/about" className="label-classic opacity-40 hover:opacity-100 transition-all">← Return</Link>
+        <Link href="/" className="label-classic opacity-40 hover:opacity-100 transition-all">← Return</Link>
         <span className="italic text-lg text-[var(--sage-accent)]">The Morning Desk</span>
       </nav>
 
@@ -20,7 +20,7 @@ export default async function AmmaReviewPage({ params }: { params: { id: string 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-16 lg:gap-24 items-start">
           <div className="order-2 lg:order-1">
             <article className="mb-20">
-              <span className="label-classic block mb-10">Amma’s Marginalia</span>
+              <span className="label-classic block mb-10">Morning Musings</span>
               <div className="max-w-prose space-y-8">
                 {book.my_review?.split('\n').map((p: string, i: number) => (
                   <p key={i} className={`prose-classic ${i === 0 ? 'drop-cap-sage' : ''}`}>{p}</p>
@@ -31,7 +31,7 @@ export default async function AmmaReviewPage({ params }: { params: { id: string 
             {/* Ritual Endnote */}
             <div className="max-w-md pt-12 border-t border-[#F5E8E0] space-y-10">
               <div className="space-y-2">
-                <span className="label-classic !text-[var(--rose-accent)]">The Morning Pairing</span>
+                <span className="label-classic !text-[var(--rose-accent)]">Pairing</span>
                 <h2 className="text-2xl lg:text-3xl italic text-[#5D4037]">{book.chai_pairing}</h2>
               </div>
               <div className="flex items-center gap-10">

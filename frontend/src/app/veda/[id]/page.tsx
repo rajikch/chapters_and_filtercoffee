@@ -12,7 +12,7 @@ export default async function VedaReviewPage({ params }: { params: { id: string 
   return (
     <main className="min-h-screen">
       <nav className="p-6 lg:px-24 lg:py-12 flex justify-between items-baseline max-w-7xl mx-auto">
-        <Link href="/about" className="label-classic opacity-40 hover:opacity-100 transition-all">← Return</Link>
+        <Link href="/" className="label-classic opacity-40 hover:opacity-100 transition-all">← Return</Link>
         <span className="italic text-lg text-[var(--sage-accent)]">The Nursery Chronicles</span>
       </nav>
 
@@ -22,7 +22,7 @@ export default async function VedaReviewPage({ params }: { params: { id: string 
             {/* Veda's Note */}
             {book.vedas_reaction && (
               <article className="mb-16">
-                <span className="label-classic block mb-8">The Nursery Note</span>
+                <span className="label-classic block mb-8">Little one's review</span>
                 <div className="space-y-6">
                   {book.vedas_reaction.split('\n').map((p: string, i: number) => (
                     <p key={i} className={`prose-classic !text-[19px] lg:!text-[21px] ${i === 0 ? 'drop-cap-sage' : ''}`}>{p}</p>
