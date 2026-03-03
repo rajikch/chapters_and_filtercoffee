@@ -14,33 +14,38 @@ supabase = create_client(
 )
 
 def add_new_book():
-    print("\n--- 📚 Chapters & Filter Coffee: Entry Portal ---")
+    print("\n--- 📚 Chapters & Filter Coffee: Open Library Portal ---")
     
     # A. Search Inputs
     query = input("Book Title & Author: ")
     shelf = input("Shelf? (v for Veda / a for Amma): ").lower()
     is_veda = (shelf == 'v')
     
-    # B. Fetch Metadata
-    resp = requests.get(f"https://www.googleapis.com/books/v1/volumes?q={query}").json()
-    if 'items' not in resp:
-        print("❌ Book not found!")
+    # B. Fetch Metadata from Open Library (No Key Needed!)
+    # We use search.json with a limit of 1 to get the best match
+    search_url = f"https://openlibrary.org/search.json?q={query}&limit=1"
+    resp = requests.get(search_url).json()
+    
+    if not resp.get('docs'):
+        print("❌ Book not found on Open Library!")
         return
     
-    volume = resp['items'][0]['volumeInfo']
-    title = volume.get('title')
+    book_data_api = resp['docs'][0]
+    title = book_data_api.get('title')
+    author = ", ".join(book_data_api.get('author_name', ['Unknown Author']))
+    
+    # Open Library uses 'cover_i' (ID) to generate image URLs
+    cover_id = book_data_api.get('cover_i')
+    if cover_id:
+        high_res_cover = f"https://covers.openlibrary.org/b/id/{cover_id}-L.jpg"
+    else:
+        high_res_cover = ""
+
+    print(f"\n✨ Found: {title} by {author}")
     
     # C. Lifestyle Inputs (The Soul)
-    print(f"\n✨ Editing Entry for: {title}")
-    
-    # Amma's Critique
-    review = input("\nAmma's Marginalia (The Review):\n> ")
-    
-    # Veda's Moment (Only if it's her shelf)
-    vedas_reaction = None
-    if is_veda:
-        vedas_reaction = input("\nThe Nursery Note (Veda's reaction/moment):\n> ")
-    
+    review = input("\nYour Marginalia (The Review):\n> ")
+    vedas_reaction = input("\nThe Nursery Note (Veda's reaction):\n> ") if is_veda else None
     pairing = input("\nDrink Pairing (e.g., A cold Nana Smoothie): ")
     
     tags_input = input("Vibe Tags (comma-separated): ")
@@ -51,16 +56,11 @@ def add_new_book():
     except ValueError:
         spice = 0
 
-    # D. Image Optimization
-    # Replacing zoom=1 with zoom=2 or 3 often fetches a higher-res cover
-    thumb = volume.get('imageLinks', {}).get('thumbnail', '')
-    high_res_cover = thumb.replace("http:", "https:").replace("zoom=1", "zoom=2")
-
-    # E. Map to your SQL Schema
+    # D. Map to your SQL Schema
     book_data = {
         "title": title,
-        "author": ", ".join(volume.get('authors', [])),
-        "category": "Nursery" if is_veda else "Morning Desk",
+        "author": author,
+        "category": "Veda" if is_veda else "Amma",
         "cover_url": high_res_cover,
         "my_review": review,
         "vedas_reaction": vedas_reaction,
@@ -70,10 +70,10 @@ def add_new_book():
         "is_vedas_pick": is_veda
     }
 
-    # F. Insert
+    # E. Insert
     try:
         supabase.table("books").insert(book_data).execute()
-        print(f"\n✅ Successfully added to the {book_data['category']} Chronicles!")
+        print(f"\n✅ Successfully added {title} to the library!")
     except Exception as e:
         print(f"\n❌ Database Error: {e}")
 
