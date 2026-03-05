@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,600;1,600&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #FDFCFB;
+  --foreground: #2C1810;
+  --sage-accent: #829385;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  /* Inter is the high-quality web version of Aptos Body */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- BRAND TYPOGRAPHY --- */
+
+.eb-garamond-bold {
+  font-family: 'EB Garamond', serif;
+  font-weight: 600;
+}
+
+/* --- THE STUDY CONTENT DNA --- */
+
+.magazine-content {
+  font-size: 16px; /* Clean, professional reading size */
+  line-height: 1.75;
+  color: #333333;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* --- LINKS STYLING (NEW) --- */
+
+.magazine-content a {
+  color: var(--sage-accent) !important;
+  text-decoration: underline !important;
+  text-decoration-color: var(--sage-accent) !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 4px !important;
+  transition: all 0.2s ease-in-out;
+  font-weight: 600 !important; /* Slightly bolder */
+}
+
+.magazine-content a:hover {
+  background-color: rgba(130, 147, 133, 0.1); /* Very faint sage highlight on hover */
+  text-decoration-thickness: 2px !important;
+  opacity: 0.9;
+}
+
+/* --- TABLE STYLING --- */
+
+.magazine-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 3rem 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  border-top: 2px solid var(--sage-accent);
+  border-bottom: 2px solid var(--sage-accent);
+}
+
+.magazine-content th {
+  text-align: left;
+  padding: 1.25rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--sage-accent);
+  background-color: rgba(130, 147, 133, 0.05); /* Soft Sage wash */
+  border-bottom: 1px solid rgba(44, 24, 16, 0.1);
+}
+
+.magazine-content td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid rgba(44, 24, 16, 0.05);
+  color: var(--foreground);
+  vertical-align: top;
+}
+
+.magazine-content tr:last-child td {
+  border-bottom: none;
+}
+
+/* Handles mobile scrolling for wide tables */
+.magazine-content figure.wp-block-table {
+  overflow-x: auto;
+  width: 100%;
+  margin: 0;
+}
+
+/* --- HEADINGS --- */
+
+.magazine-content h2 {
+  display: block !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--sage-accent);
+  margin-top: 3.5rem;
+  margin-bottom: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.magazine-content h3 {
+  display: block !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--foreground);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+/* Clean Paragraph Flow */
+.magazine-content p {
+  margin-bottom: 1.5rem;
+}
+
+/* Standard, Clean Bullets */
+.magazine-content ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin: 1.5rem 0;
+}
+
+.magazine-content li {
+  margin-bottom: 0.6rem;
+}
+
+/* No Word Cutting */
+.magazine-content * {
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: none;
+}
