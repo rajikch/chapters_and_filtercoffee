@@ -1,71 +1,70 @@
 import Link from 'next/link';
 
-interface ArticleProps {
-  params: {
-    slug: string;
-  };
+// 1. Explicitly define the props for Next.js 15
+interface PageProps {
+  params: Promise<{ slug: string }>;
 }
 
-export default async function ArticlePage({ params }: ArticleProps) {
-  // Now TypeScript knows that params.slug exists and is a string!
-  const { slug } = params;
+export default async function ArticlePage({ params }: PageProps) {
+  // 2. Await the params correctly
+  const resolvedParams = await params;
+  const id = resolvedParams.slug;
 
-  const res = await fetch(
-    `https://public-api.wordpress.com/wp/v2/sites/thebrewedchapter.wordpress.com/posts?per_page=1&_embed`
+  // 3. Fetch from WordPress by ID
+  // We use the direct ID endpoint which is the most reliable for free WP accounts
+  const wpRes = await fetch(
+    `https://public-api.wordpress.com/wp/v2/sites/thebrewedchapter.wordpress.com/posts/${id}?_embed`,
+    { next: { revalidate: 0 } }
   );
-  
-  const posts = await res.json();
-  const post = posts[0];
 
-  if (!post) return <div className="p-20 text-center font-serif italic">Opening the archives...</div>;
+  const post = await wpRes.json();
 
-  const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+  // 4. Fallback if the ID doesn't exist (post.id will be missing)
+  if (!post || !post.id) {
+    return (
+      <main className="min-h-screen bg-[#FDFCFB] px-6 py-20 text-center flex flex-col items-center justify-center">
+        <h1 className="font-serif italic text-2xl text-[#2C1810]">Chapter not found.</h1>
+        <p className="opacity-60 text-[10px] uppercase tracking-[0.2em] mt-2 mb-8">
+          The identifier "{id || 'none'}" returned no data.
+        </p>
+        <Link href="/" className="text-[#829385] border-b border-[#829385]/30 hover:border-[#829385] transition-all uppercase text-[10px] tracking-widest font-bold">
+          Return to The River
+        </Link>
+      </main>
+    );
+  }
 
   return (
-    <article className="max-w-4xl mx-auto px-6 py-20 bg-[#FDFCFB]">
-      {/* Featured Image as a soft-focus cover */}
-      {featuredImage && (
-        <div className="mb-12">
-          <img 
-            src={featuredImage} 
-            alt={post.title.rendered} 
-            className="w-full h-[65vh] object-cover rounded-sm shadow-sm opacity-95" 
-          />
-        </div>
-      )}
-
-      <header className="text-center mb-16">
-        <span className="uppercase tracking-[0.4em] text-[10px] text-[#8b735b] mb-4 block">
-          The Brewed Chapter
-        </span>
+    <main className="min-h-screen bg-[#FDFCFB] text-[#2C1810] pb-20">
+      {/* --- BACK BUTTON --- */}
+      <header className="max-w-3xl mx-auto px-6 pt-20 pb-12 text-center">
+        <Link href="/" className="text-[10px] font-bold uppercase tracking-[0.4em] opacity-30 hover:opacity-100 transition-opacity mb-8 block">
+          ← Back to the River
+        </Link>
+        
         <h1 
-          className="eb-garamond-bold text-5xl md:text-6xl text-[#2c1810] leading-tight mb-6"
+          className="text-4xl md:text-5xl font-serif italic mb-6 leading-tight"
           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
         />
-        <div className="h-[1px] w-12 bg-[#8b735b] mx-auto mb-6 opacity-50"></div>
         
-        {/* Swapped "A Story for Veda" with the dynamic excerpt from WordPress */}
-        <div 
-          className="italic text-[#5a4a42] font-serif max-w-xl mx-auto leading-relaxed"
-          dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }} 
-        />
+        <div className="flex justify-center gap-4 text-[10px] uppercase tracking-widest opacity-40 font-bold">
+          <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+          <span>•</span>
+          <span>By Amma</span>
+        </div>
       </header>
 
-      {/* This class "magazine-content" uses the CSS we wrote to fix word-breaking */}
+      {/* --- ARTICLE CONTENT --- */}
       <div 
-        className="magazine-content max-w-2xl mx-auto"
-        dangerouslySetInnerHTML={{ __html: post.content.rendered }} 
+        className="magazine-content px-6 mx-auto max-w-[650px]"
+        dangerouslySetInnerHTML={{ __html: post.content.rendered }}
       />
 
-      {/* Connected Archive Link Section */}
-      <footer className="max-w-2xl mx-auto mt-20 pt-10 border-t border-black/5 text-center">
-        <Link 
-          href="/archive" 
-          className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#8b735b] hover:opacity-60 transition-opacity"
-        >
-          → View the Full Deep Dive Archives
+      <footer className="max-w-3xl mx-auto px-6 mt-20 pt-10 border-t border-black/5 text-center">
+        <Link href="/" className="font-serif italic text-xl opacity-60 hover:opacity-100 transition-opacity">
+          Chapters & Filter Coffee
         </Link>
       </footer>
-    </article>
+    </main>
   );
 }
